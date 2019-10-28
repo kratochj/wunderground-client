@@ -13,7 +13,7 @@ public class Downloader {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        String result = restTemplate.getForObject(URL, String.class);
+        Observations result = restTemplate.getForObject(URL, Observations.class);
 
         System.out.println(result);
     }
