@@ -2,7 +2,7 @@ package eu.kratochvil.pwssync;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-public class Metric {
+public class MetricElastic {
     private Float tempHigh;
     private Float tempLow;
     private Float tempAvg;
@@ -27,10 +27,10 @@ public class Metric {
     private Float precipRate;
     private Float precipTotal;
 
-    public Metric() {
+    public MetricElastic() {
     }
 
-    public Metric(Float tempHigh, Float tempLow, Float tempAvg, Float windspeedHigh, Float windspeedLow, Float windspeedAvg, Float windgustHigh, Float windgustLow, Float windgustAvg, Float dewptHigh, Float dewptLow, Float dewptAvg, Float windchillHigh, Float windchillLow, Float windchillAvg, Float heatindexHigh, Float heatindexLow, Float heatindexAvg, Float pressureMax, Float pressureMin, Float pressureTrend, Float precipRate, Float precipTotal) {
+    public MetricElastic(Float tempHigh, Float tempLow, Float tempAvg, Float windspeedHigh, Float windspeedLow, Float windspeedAvg, Float windgustHigh, Float windgustLow, Float windgustAvg, Float dewptHigh, Float dewptLow, Float dewptAvg, Float windchillHigh, Float windchillLow, Float windchillAvg, Float heatindexHigh, Float heatindexLow, Float heatindexAvg, Float pressureMax, Float pressureMin, Float pressureTrend, Float precipRate, Float precipTotal) {
         this.tempHigh = tempHigh;
         this.tempLow = tempLow;
         this.tempAvg = tempAvg;

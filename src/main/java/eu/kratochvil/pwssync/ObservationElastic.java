@@ -4,13 +4,13 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import java.util.Date;
 
-public class Observation {
+public class ObservationElastic {
 
     private String id;
     private String stationID;
     private String tz;
-    private String obsTimeUtc;
-    private String obsTimeLocal;
+    private Date obsTimeUtc;
+    private Date obsTimeLocal;
     private long epoch;
     private float lat;
     private float lon;
@@ -22,12 +22,12 @@ public class Observation {
     private Integer humidityAvg;
     private Integer qcStatus;
 
-    private Metric metric;
+    private MetricElastic metric;
 
-    public Observation() {
+    public ObservationElastic() {
     }
 
-    public Observation(String stationID, String tz, String obsTimeUtc, String obsTimeLocal, long epoch, float lat, float lon, Object solarRadiationHigh, Object uvHigh, Integer winddirAvg, Integer humidityHigh, Integer humidityLow, Integer humidityAvg, Integer qcStatus, Metric metric) {
+    public ObservationElastic(String stationID, String tz, Date obsTimeUtc, Date obsTimeLocal, long epoch, float lat, float lon, Object solarRadiationHigh, Object uvHigh, Integer winddirAvg, Integer humidityHigh, Integer humidityLow, Integer humidityAvg, Integer qcStatus, MetricElastic metric) {
         this.stationID = stationID;
         this.tz = tz;
         this.obsTimeUtc = obsTimeUtc;
@@ -69,19 +69,19 @@ public class Observation {
         this.tz = tz;
     }
 
-    public String getObsTimeUtc() {
+    public Date getObsTimeUtc() {
         return obsTimeUtc;
     }
 
-    public void setObsTimeUtc(String obsTimeUtc) {
+    public void setObsTimeUtc(Date obsTimeUtc) {
         this.obsTimeUtc = obsTimeUtc;
     }
 
-    public String getObsTimeLocal() {
+    public Date getObsTimeLocal() {
         return obsTimeLocal;
     }
 
-    public void setObsTimeLocal(String obsTimeLocal) {
+    public void setObsTimeLocal(Date obsTimeLocal) {
         this.obsTimeLocal = obsTimeLocal;
     }
 
@@ -165,11 +165,11 @@ public class Observation {
         this.qcStatus = qcStatus;
     }
 
-    public Metric getMetric() {
+    public MetricElastic getMetric() {
         return metric;
     }
 
-    public void setMetric(Metric metric) {
+    public void setMetric(MetricElastic metric) {
         this.metric = metric;
     }
 

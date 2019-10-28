@@ -1,0 +1,18 @@
+<Configuration status="DEBUG">
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="io.searchbox" level="DEBUG">
+            <AppenderRef ref="CONSOLE"/>
+        </Logger>
+        <Logger name="eu.kratochvil" level="DEBUG">
+            <AppenderRef ref="CONSOLE"/>
+        </Logger>
+        <Root level="DEBUG">
+            <AppenderRef ref="CONSOLE"/>
+        </Root>
+    </Loggers>
+</Configuration>
