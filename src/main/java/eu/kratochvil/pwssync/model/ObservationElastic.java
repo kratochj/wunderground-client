@@ -43,7 +43,7 @@ public class ObservationElastic {
         this.humidityAvg = humidityAvg;
         this.qcStatus = qcStatus;
         this.metric = metric;
-        this.id = stationID + "#" + epoch;
+        this.id = stationID + epoch;
     }
 
     public String getId() {

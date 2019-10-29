@@ -21,7 +21,7 @@ public class ElasticUploader {
     public boolean uploadData() {
         try {
             Observations observations = downloader.download();
-            log.info("Uploading data - {} records", () -> observations.getObservations().size());
+            log.debug("Uploading data - {} records", () -> observations.getObservations().size());
             for (Observation observation : observations.getObservations()) {
                 elasticClient.insertObservation(observation);
             }

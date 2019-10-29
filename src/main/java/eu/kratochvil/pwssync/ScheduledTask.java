@@ -16,7 +16,7 @@ public class ScheduledTask {
 
     @Scheduled(fixedRate = 5000)
     public void runImport() {
-        log.info("Running import job");
+        log.debug("Running import job");
         elasticUploader.uploadData();
     }
 }

@@ -24,6 +24,7 @@ class Downloader {
 
         if (result != null) {
             log.debug("Loaded {} records", () -> result.getObservations().size());
+            log.debug("Last observation from: {}", () -> result.getObservations().get(result.getObservations().size() - 1).getObsTimeLocal());
         }
 
         return result;
