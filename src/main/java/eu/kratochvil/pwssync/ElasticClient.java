@@ -57,8 +57,6 @@ public class ElasticClient {
             jestClient.execute(new CreateIndex.Builder(INDEX).build());
         }
 
-        observation.setId(observation.getStationID() + "#" + observation.getEpoch());
-
         Index index = new Index.Builder(ObservationFactory.convert(observation)).index(INDEX).type(TYPE).build();
         jestClient().execute(index);
 
