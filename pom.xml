@@ -94,7 +94,7 @@
         <docker.image.prefix>registry.kratochvil.eu/pws-sync</docker.image.prefix>
 
         <elasticsearch.version>6.1.2</elasticsearch.version>
-        <jackson.version>2.9.10</jackson.version>
+        <jackson.version>2.10.0</jackson.version>
         <java.version>1.8</java.version>
 
     </properties>
