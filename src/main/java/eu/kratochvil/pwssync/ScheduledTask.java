@@ -14,7 +14,7 @@ public class ScheduledTask {
     @Autowired
     private ElasticUploader elasticUploader;
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedDelay = 120000)
     public void runImport() {
         log.debug("Running import job");
         elasticUploader.uploadData();

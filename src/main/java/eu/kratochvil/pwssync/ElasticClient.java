@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -31,9 +32,15 @@ public class ElasticClient {
     private static final Logger log = LogManager.getLogger(ElasticClient.class);
 
     //The config parameters for the connection
-    private static final String HOST = "192.168.1.34";
-    private static final int PORT_ONE = 9200;
-    private static final String SCHEME = "http";
+    @Value("${elasticsearch.host}")
+    private String HOST;
+
+    @Value("${elasticsearch.port}")
+    private int PORT_ONE = 9200;
+
+    @Value("${elasticsearch.scheme}")
+    private String SCHEME = "http";
+
     private static final String INDEX = "pws-observations-data";
     private static final String TYPE = "observation";
 
@@ -82,6 +89,7 @@ public class ElasticClient {
             Index index = new Index.Builder(observationElastic).index(INDEX).type(TYPE).build();
             JestResult insertResult = jestClient().execute(index);
             log.trace("Insert result: {}", () -> insertResult.isSucceeded());
+            log.info("Inserted observation: {}, with result: {}", () -> observationElastic.getObsTimeLocal(), ()->insertResult.isSucceeded());
         } else {
             log.trace("Object already exists");
         }
