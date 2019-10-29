@@ -1,5 +1,7 @@
 package eu.kratochvil.pwssync;
 
+import eu.kratochvil.pwssync.model.Observation;
+import eu.kratochvil.pwssync.model.ObservationFactory;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.JestResult;
@@ -15,8 +17,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.text.SimpleDateFormat;
 
 @Component

@@ -1,11 +1,11 @@
 package eu.kratochvil.pwssync;
 
+import eu.kratochvil.pwssync.model.Observation;
+import eu.kratochvil.pwssync.model.Observations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 @Component
 public class ElasticUploader {

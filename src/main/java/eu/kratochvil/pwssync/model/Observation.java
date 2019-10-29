@@ -1,16 +1,14 @@
-package eu.kratochvil.pwssync;
+package eu.kratochvil.pwssync.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import java.util.Date;
-
-public class ObservationElastic {
+public class Observation {
 
     private String id;
     private String stationID;
     private String tz;
-    private Date obsTimeUtc;
-    private Date obsTimeLocal;
+    private String obsTimeUtc;
+    private String obsTimeLocal;
     private long epoch;
     private float lat;
     private float lon;
@@ -22,12 +20,12 @@ public class ObservationElastic {
     private Integer humidityAvg;
     private Integer qcStatus;
 
-    private MetricElastic metric;
+    private Metric metric;
 
-    public ObservationElastic() {
+    public Observation() {
     }
 
-    public ObservationElastic(String stationID, String tz, Date obsTimeUtc, Date obsTimeLocal, long epoch, float lat, float lon, Object solarRadiationHigh, Object uvHigh, Integer winddirAvg, Integer humidityHigh, Integer humidityLow, Integer humidityAvg, Integer qcStatus, MetricElastic metric) {
+    public Observation(String stationID, String tz, String obsTimeUtc, String obsTimeLocal, long epoch, float lat, float lon, Object solarRadiationHigh, Object uvHigh, Integer winddirAvg, Integer humidityHigh, Integer humidityLow, Integer humidityAvg, Integer qcStatus, Metric metric) {
         this.stationID = stationID;
         this.tz = tz;
         this.obsTimeUtc = obsTimeUtc;
@@ -69,19 +67,19 @@ public class ObservationElastic {
         this.tz = tz;
     }
 
-    public Date getObsTimeUtc() {
+    public String getObsTimeUtc() {
         return obsTimeUtc;
     }
 
-    public void setObsTimeUtc(Date obsTimeUtc) {
+    public void setObsTimeUtc(String obsTimeUtc) {
         this.obsTimeUtc = obsTimeUtc;
     }
 
-    public Date getObsTimeLocal() {
+    public String getObsTimeLocal() {
         return obsTimeLocal;
     }
 
-    public void setObsTimeLocal(Date obsTimeLocal) {
+    public void setObsTimeLocal(String obsTimeLocal) {
         this.obsTimeLocal = obsTimeLocal;
     }
 
@@ -165,11 +163,11 @@ public class ObservationElastic {
         this.qcStatus = qcStatus;
     }
 
-    public MetricElastic getMetric() {
+    public Metric getMetric() {
         return metric;
     }
 
-    public void setMetric(MetricElastic metric) {
+    public void setMetric(Metric metric) {
         this.metric = metric;
     }
 

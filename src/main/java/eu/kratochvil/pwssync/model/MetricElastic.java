@@ -1,4 +1,4 @@
-package eu.kratochvil.pwssync;
+package eu.kratochvil.pwssync.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
