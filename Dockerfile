@@ -5,6 +5,11 @@ WORKDIR /tmp/
 RUN mvn package
 
 FROM openjdk:8-jdk-alpine AS RUNTIME
+
+ENV ELASTICSEARCH_HOST=localhost
+ENV ELASTICSEARCH_PORT=9200
+ENV ELASTICSEARCH_SCHEME=http
+
 COPY --from=MAVEN_BUILD /tmp/target/dependency/BOOT-INF/lib /app/lib
 COPY --from=MAVEN_BUILD /tmp/target/dependency/META-INF /app/META-INF
 COPY --from=MAVEN_BUILD /tmp/target/dependency/BOOT-INF/classes /app
