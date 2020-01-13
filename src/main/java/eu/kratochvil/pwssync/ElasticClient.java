@@ -46,23 +46,24 @@ public class ElasticClient {
     private static RestHighLevelClient restHighLevelClient = null;
 
     public Observation insertObservation(Observation observation) throws IOException {
-        try (RestHighLevelClient client = getClient(SCHEME, HOST, PORT_ONE)) {
+        RestHighLevelClient client = getClient(SCHEME, HOST, PORT_ONE);
 
-            GetIndexRequest request = new GetIndexRequest(INDEX);
-            boolean exists = client.indices().exists(request, RequestOptions.DEFAULT);
-            if (!exists) {
-                CreateIndexRequest newIndexRequest = new CreateIndexRequest(INDEX);
-                CreateIndexResponse createIndexResponse = client.indices().create(newIndexRequest, RequestOptions.DEFAULT);
-                log.debug("New index {} created", INDEX);
-            }
+        GetIndexRequest request = new GetIndexRequest(INDEX);
+        boolean exists = client.indices().exists(request, RequestOptions.DEFAULT);
+        if (!exists) {
+            CreateIndexRequest newIndexRequest = new CreateIndexRequest(INDEX);
+            CreateIndexResponse createIndexResponse = client.indices().create(newIndexRequest, RequestOptions.DEFAULT);
+            log.debug("New index {} created", INDEX);
+        }
 
-            ObservationElastic observationElastic = ObservationFactory.convert(observation);
+        ObservationElastic observationElastic = ObservationFactory.convert(observation);
 
-            IndexRequest idxrq = new IndexRequest(INDEX);
-            idxrq.id(observationElastic.getId());
-            idxrq.source(new ObjectMapper().writeValueAsString(observationElastic), XContentType.JSON);
-            IndexResponse indexResponse = client.index(idxrq, RequestOptions.DEFAULT);
-            System.out.println("response id: " + indexResponse.getId());
+        IndexRequest idxrq = new IndexRequest(INDEX);
+        idxrq.id(observationElastic.getId());
+        idxrq.source(new ObjectMapper().writeValueAsString(observationElastic), XContentType.JSON);
+        IndexResponse indexResponse = client.index(idxrq, RequestOptions.DEFAULT);
+        if ("created".equals(indexResponse.getResult().getLowercase())) {
+            log.debug("Observation saved: {}", indexResponse.getId());
         }
         return observation;
     }
