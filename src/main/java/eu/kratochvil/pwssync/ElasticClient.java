@@ -1,22 +1,21 @@
 package eu.kratochvil.pwssync;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.kratochvil.pwssync.model.Observation;
 import eu.kratochvil.pwssync.model.ObservationElastic;
 import eu.kratochvil.pwssync.model.ObservationFactory;
-import io.searchbox.client.JestClient;
-import io.searchbox.client.JestClientFactory;
-import io.searchbox.client.JestResult;
-import io.searchbox.client.config.HttpClientConfig;
-import io.searchbox.core.Get;
-import io.searchbox.core.Index;
-import io.searchbox.core.Search;
-import io.searchbox.core.SearchResult;
-import io.searchbox.indices.CreateIndex;
-import io.searchbox.indices.IndicesExists;
+import org.apache.http.HttpHost;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.CreateIndexResponse;
+import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +32,7 @@ public class ElasticClient {
 
     //The config parameters for the connection
     @Value("${elasticsearch.host}")
-    private String HOST;
+    private String HOST = "localhost";
 
     @Value("${elasticsearch.port}")
     private int PORT_ONE = 9200;
@@ -44,56 +43,36 @@ public class ElasticClient {
     private static final String INDEX = "pws-observations-data";
     private static final String TYPE = "observation";
 
-    private static JestClient jestClient;
+    private static RestHighLevelClient restHighLevelClient = null;
 
-    public JestClient jestClient() {
-        if (jestClient != null) {
-            return jestClient;
-        }
-        JestClientFactory factory = new JestClientFactory();
-        factory.setHttpClientConfig(
-                new HttpClientConfig.Builder("http://192.168.1.34:9200")
-                        .multiThreaded(true)
-                        .defaultMaxTotalConnectionPerRoute(2)
-                        .maxTotalConnection(10)
-                        .build());
-        jestClient = factory.getObject();
-        return jestClient;
-    }
+    public Observation insertObservation(Observation observation) throws IOException {
+        try (RestHighLevelClient client = getClient(SCHEME, HOST, PORT_ONE)) {
 
+            GetIndexRequest request = new GetIndexRequest(INDEX);
+            boolean exists = client.indices().exists(request, RequestOptions.DEFAULT);
+            if (!exists) {
+                CreateIndexRequest newIndexRequest = new CreateIndexRequest(INDEX);
+                CreateIndexResponse createIndexResponse = client.indices().create(newIndexRequest, RequestOptions.DEFAULT);
+                log.debug("New index {} created", INDEX);
+            }
 
-    public Observation insertObservation(Observation observation) throws IOException{
+            ObservationElastic observationElastic = ObservationFactory.convert(observation);
 
-        // Check for index
-        JestResult result = jestClient().execute(new IndicesExists.Builder(INDEX).build());
-        if (!result.isSucceeded()) {
-            jestClient.execute(new CreateIndex.Builder(INDEX).build());
-        }
-
-        ObservationElastic observationElastic = ObservationFactory.convert(observation);
-
-        // Check for existing record
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(QueryBuilders.matchQuery("id", observationElastic.getId()));
-
-        Search search = new Search.Builder(searchSourceBuilder.toString())
-                .addIndex(INDEX)
-                .addType(TYPE)
-                .build();
-
-        SearchResult searchResult = jestClient().execute(search);
-//        Get get = new Get.Builder(INDEX, observationElastic.getId()).type(TYPE).build();
-//        JestResult getResult = jestClient().execute(get);
-        if (searchResult.isSucceeded() && searchResult.getTotal() == 0) {
-            log.trace("Storing object");
-            Index index = new Index.Builder(observationElastic).index(INDEX).type(TYPE).build();
-            JestResult insertResult = jestClient().execute(index);
-            log.trace("Insert result: {}", () -> insertResult.isSucceeded());
-            log.info("Inserted observation: {}, with result: {}", () -> observationElastic.getObsTimeLocal(), ()->insertResult.isSucceeded());
-        } else {
-            log.trace("Object already exists");
+            IndexRequest idxrq = new IndexRequest(INDEX);
+            idxrq.id(observationElastic.getId());
+            idxrq.source(new ObjectMapper().writeValueAsString(observationElastic), XContentType.JSON);
+            IndexResponse indexResponse = client.index(idxrq, RequestOptions.DEFAULT);
+            System.out.println("response id: " + indexResponse.getId());
         }
         return observation;
+    }
+
+    private static RestHighLevelClient getClient(String SCHEME, String HOST, int PORT_ONE) {
+        if (restHighLevelClient == null) {
+            restHighLevelClient = new RestHighLevelClient(
+                    RestClient.builder(HttpHost.create(SCHEME + "://" + HOST + ":" + PORT_ONE)));
+        }
+        return restHighLevelClient;
     }
 
     private DateFormat dateFormatResult = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -112,6 +91,17 @@ public class ElasticClient {
         }
     }
 
+    public void setHOST(String HOST) {
+        this.HOST = HOST;
+    }
+
+    public void setPORT_ONE(int PORT_ONE) {
+        this.PORT_ONE = PORT_ONE;
+    }
+
+    public void setSCHEME(String SCHEME) {
+        this.SCHEME = SCHEME;
+    }
 }
 
 
